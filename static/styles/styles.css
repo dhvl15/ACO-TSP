@@ -1,0 +1,115 @@
+/* CSS for styling the elements */
+#heading {
+  font-family: Arial, sans-serif;
+  color: white;
+  background-color: #333;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensures the heading stays above other elements */
+  padding: 25px; /* Add padding around the content inside the heading */
+  margin-bottom: 10px;
+}
+
+/* CSS for styling the elements */
+label,
+select {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+label {
+  width: 150px; /* Adjust the width as needed */
+  text-align: right;
+  margin-left: 40px;
+}
+
+select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100px; /* Adjust the width as needed */
+  margin-right: 100px;
+}
+
+/* Add border around the group of elements */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #999;
+  padding: 10px;
+  border-radius: 8px;
+  flex-wrap: wrap;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.buttons button {
+  padding: 15px 30px; /* Adjust padding to make buttons larger */
+  margin: 10px;
+  border: none;
+  border-radius: 25px; /* Increase border-radius for rounder buttons */
+  cursor: pointer;
+  font-size: 18px; /* Increase font size */
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+#start_btn,
+#start_btn_tsp {
+  background-color: #4285f4;
+  color: white;
+  border-radius: 4px;
+}
+
+#start_btn:hover,
+#start_btn_tsp:hover {
+  background-color: #3367d6;
+  border-radius: 4px;
+}
+
+#stop_btn,
+#stop_btn_tsp {
+  background-color: #ea4335;
+  color: white;
+  border-radius: 4px;
+}
+
+#stop_btn:hover,
+#stop_btn_tsp:hover {
+  background-color: #d33126;
+  border-radius: 4px;
+}
+
+#clear_btn,
+#clear_btn_tsp {
+  background-color: #34a853;
+  color: white;
+  border-radius: 4px;
+}
+
+#clear_btn:hover,
+#clear_btn_tsp:hover {
+  background-color: #2b8e12;
+  border-radius: 4px;
+}
+
+.cop {
+  display: flex;
+  justify-content: space-around;
+}
+
+.path-container {
+  flex: 1; /* Each container takes equal space */
+  margin-right: 10px; /* Margin between the containers */
+}

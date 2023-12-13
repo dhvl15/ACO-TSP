@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TSP using ACO</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='styles/styles.css') }}"
+    />
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
+  </head>
+  <body>
+    <h1 id="heading">TSP using ACO</h1>
+    <div class="container">
+      <label for="problem">Choose your problem:</label>
+      <select id="problem">
+        <option value="Oliver30">Oliver30</option>
+        <option value="Eil51">Eil51</option>
+        <option value="Eil76">Eil76</option>
+        <option value="kroa100">kroa100</option>
+        <option value="myTest">myTest</option>
+      </select>
+
+      <label for="max_gen">Max Generation:</label>
+      <select id="max_gen">
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+        <option value="2000">2000</option>
+        <option value="5000">5000</option>
+        <option value="10000">10000</option>
+      </select>
+
+      <label for="test_times">Test Times:</label>
+      <select id="test_times">
+        <option value="1">1</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+    <br />
+    <div class="container">
+      <h2>Result (ACS)</h2>
+      <label>Minimum Distance:</label>
+      <span id="min_distance">0</span>
+
+      <label>Standard Deviation:</label>
+      <span id="std_deviation">0</span>
+
+      <label>Current Generation:</label>
+      <span id="current_generation">0</span>
+
+      <button id="start_btn">Let's find out!</button>
+      <!--<button id="stop_btn" disabled>Stop it!</button>-->
+      <button id="clear_btn">Clear</button>
+    </div>
+    <br />
+    <div class="container">
+      <h2>Result (TSP)</h2>
+      <label>Minimum Distance:</label>
+      <span id="min_distance_tsp">0</span>
+
+      <!--<label>Standard Deviation:</label>
+      <span id="std_deviation">0</span>
+
+      <label>Current Generation:</label>
+      <span id="current_generation">0</span>-->
+
+      <button id="start_btn_tsp">Let's find out!</button>
+      <!--<button id="stop_btn_tsp" disabled>Stop it!</button> -->
+      <button id="clear_btn_tsp">Clear</button>
+    </div>
+
+    <br />
+
+    <div class="container-new">
+      <div class="cop">
+        <div class ="col">
+        <h2>Initial Path (ACS)</h2>
+        <canvas
+          id="init_path_canvas"
+          width="520"
+          height="520"
+          style="border: 1px solid #000"
+        ></canvas>
+        </div>
+        <div class="col">
+        <h2>Optimal Path (TSP)</h2>
+        <canvas
+          id="path_canvas_tsp"
+          width="520"
+          height="520"
+          style="border: 1px solid #000"
+        ></canvas>
+      </div>
+      </div>
+
+      <br />
+
+      <div class="cop">
+        <div class ="col">
+        <h2>Evolution Curve (ACS)</h2>
+        <canvas
+          id="curve_canvas"
+          width="520"
+          height="520"
+          style="border: 1px solid #000"
+        ></canvas>
+        </div>
+      <div class = "col" width="520"
+      height="520">
+        <h2>Optimal Path (ACS)</h2>
+        <canvas
+          id="path_canvas"
+          width="520"
+          height="520"
+          style="border: 1px solid #000"
+        ></canvas>
+      </div>
+      </div>
+    </div>
+
+    
+
+    <script>
+      $(document).ready(function () {
+        $("#start_btn").click(function () {
+          var problem = $("#problem").val();
+          var max_gen = $("#max_gen").val();
+          var test_times = $("#test_times").val();
+
+          $.ajax({
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            url: "/run_acs",
+            data: JSON.stringify({
+              problem: problem,
+              max_gen: max_gen,
+              test_times: test_times,
+            }),
+            success: function (data) {
+              $("#min_distance").text(
+                data.average_distances[data.average_distances.length - 1]
+              );
+              $("#std_deviation").text(data.std_deviation);
+              $("#current_generation").text(data.average_distances.length);
+
+              drawCanvas("init_path_canvas", data.init_path);
+              drawCanvas("path_canvas", data.optimal_path);
+              drawCanvas("curve_canvas", data.curve_path);
+            },
+          });
+
+          /*if (problem == "Oliver30") {
+            document.getElementById("desc").innerHTML = "Comprising 30 cities, this dataset is a standard benchmark used to evaluate optimization algorithms for the Traveling Salesman Problem (TSP).";
+          } else if(problem == "Eli51"){
+
+          }else if(problem == "Eli76"){
+
+          }else if(problem == 'kroa100'){
+
+          }else {
+            
+          }*/
+          
+
+          $("#start_btn").prop("disabled", true);
+          $("#stop_btn").prop("disabled", false);
+        });
+
+        $("#start_btn_tsp").click(function () {
+          var problem = $("#problem").val();
+
+          $.ajax({
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            url: "/run_tsp",
+            data: JSON.stringify({
+              problem: problem,
+            }),
+            success: function (data) {
+              $("#min_distance_tsp").text(
+                data.average_distances
+              );
+
+              drawCanvas("path_canvas_tsp", data.optimal_path);
+            },
+          });
+
+          $("#start_btn_tsp").prop("disabled", true);
+          $("#stop_btn_tsp").prop("disabled", false);
+        });
+
+        $("#stop_btn").click(function () {
+          $("#start_btn").prop("disabled", false);
+          $("#stop_btn").prop("disabled", true);
+        });
+
+        $("#clear_btn").click(function () {
+          $("#min_distance").text("0");
+          $("#std_deviation").text("0");
+          $("#current_generation").text("0");
+
+          var pathCanvas = document.getElementById("path_canvas");
+          var curveCanvas = document.getElementById("curve_canvas");
+
+          var pathContext = pathCanvas.getContext("2d");
+          var curveContext = curveCanvas.getContext("2d");
+
+          pathContext.clearRect(0, 0, pathCanvas.width, pathCanvas.height);
+          curveContext.clearRect(0, 0, curveCanvas.width, curveCanvas.height);
+
+          window.location.reload();
+        });
+
+        $("#clear_btn_tsp").click(function () {
+          $("#min_distance_tsp").text("0");
+
+          var pathCanvasTsp = document.getElementById("path_canvas_tsp");
+
+          var pathContexttsp = pathCanvasTsp.getContext("2d");
+
+          pathContexttsp.clearRect(0, 0, pathCanvasTsp.width, pathCanvasTsp.height);
+
+          window.location.reload();
+        });
+
+        function drawCanvas(canvasId, imagePath) {
+          var canvas = document.getElementById(canvasId);
+          var context = canvas.getContext("2d");
+
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+          var img = new Image();
+          img.src = imagePath;
+
+          img.onload = function () {
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+          };
+        }
+      });
+    </script>
+  </body>
+</html>
