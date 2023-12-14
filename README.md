@@ -26,13 +26,7 @@ By combining exploration (to discover new paths) and exploitation (to exploit th
 3. Eil76: Featuring 76 cities, this dataset offers a more intricate challenge for optimization algorithms seeking optimal solutions in the Traveling Salesman Problem.
 4. kroa100: A dataset encompassing 100 cities, providing a highly complex scenario for optimization algorithms, particularly in efficiently solving the Traveling Salesman Problem.
 
-### III. Code Explanation
-1. **Ant Colony System**
-    - The core algorithm is an enhanced Ant Colony Optimization algorithm, ACS.
-    - ACS is a probabilistic algorithm used to find optimized paths. It was introduced by Marco Dorigo in 1992, inspired by ants' behavior in finding food.
-    - In 1997, Dorigo optimized ACS with a new parallel computing approach.
-
-### IV. After More Improvements, Applicable Scenarios
+### III. After More Improvements, Applicable Scenarios
 1. Traveling Salesman Problem (TSP)
 2. Job-shop Scheduling Problem
 3. Vehicle Routing Problem
